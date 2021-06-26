@@ -1,0 +1,9 @@
+# device = 'cuda:0'
+BOS_ID = 40003
+BOS = '<s>_NOUN'
+BOS_LIST = ['<s0>_NOUN','<s1>_NOUN', '<s2>_NOUN', '<s3>_NOUN', '<s4>_NOUN', '<s5>_NOUN', '<s6>_NOUN', '<s7>_NOUN', '<s8>_NOUN', '<s9>_NOUN', '<s10>_NOUN', '<s11>_NOUN', '<s12>_NOUN', '<s13>_NOUN', '<s14>_NOUN', '<s15>_NOUN' ,'<s16>_NOUN', '<s17>_NOUN', '<s18>_NOUN', '<s19>_NOUN', '<s20>_NOUN', '<s21>_NOUN', '<s22>_NOUN', '<s23>_NOUN', '<s24>_NOUN', '<s25>_NOUN', '<s>_NOUN']
+FRAME_PAD = '<empty-frame>_Frame'
+FRAME_START = '<start-frame>_Frame'
+FRAME_END = '<end-frame>_Frame'
+inner = 2
+inter = 3
