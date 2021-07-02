@@ -63,3 +63,53 @@ def checkpoint_exist(path):
         return True
     else:
         return False
+
+def get_output_name(filename, args):
+#         print('repetitve_penalty',args.repetitve_penalty)
+    if args.is_sampling:
+        filename = filename + '_is_sampling'
+    if args.force_one_noun:
+        filename = filename + '_force_one_noun'
+    if args.abs_position:
+        filename = filename + '_abs_position'
+    if args.ethan_position:
+        filename = filename + '_ethan_position'
+    if args.recurrent_UHop:
+        filename = filename + '_recurrent_UHop'
+    if args.story_noun_query:
+        filename = filename + '_story_noun_query'
+    if args.is_image_abs_position:
+        filename = filename + '_is_image_abs_position'
+    if args.is_seperate_structural:
+        filename = filename + '_is_seperate_structural'
+    if args.is_term_only:
+        filename = filename + '_is_term_only'
+    if args.is_story_noun_candidate:
+        filename = filename + '_is_story_noun_candidate'
+    if args.only_five_sentences:
+        filename = filename + '_only_five_sentences'
+    if args.only_four2six_sentences:
+        filename = filename + '_only_four2six_sentences'
+    if args.only_five2seven_sentences:
+        filename = filename + '_only_5to7'
+    if args.only_six2seven_sentences:
+        filename = filename + '_only_6to7'
+    if args.over5:
+        filename = filename + '_over5'
+    if args.is_start_end_frame:
+        filename = filename + '_is_start_end_frame'
+    if args.is_beam_search_graph:
+        filename = filename + '_is_beam_search_graph'
+
+    filename = filename + f'_repetitve_penalty_{args.repetitve_penalty}'
+    if args.is_KG_only:
+        filename = filename + '_is_KG_only'
+    if args.no_reverse:
+        filename = filename + '_no_reverse'
+    if args.is_restrict_vocab:
+        filename = filename + '_is_restrict_vocab'
+
+    filename = filename + "_" + args.file_type
+    if args.small:
+        filename = filename + '_small'
+    return filename
