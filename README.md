@@ -21,9 +21,39 @@ python==3.7.6
   * VIST golden story path
 
 Download them via:  
+> Working directory: `PRVIST/story_plotting/`
 ```bash=
-cd story_plotting
 bash download_big_data.sh
 unzip data.zip
 ```
 ## Stage 1: Story Plotting
+### A. Training Storyline Predictor: 
+> Working directory: `PRVIST/story_plotting/script`
+```bash=
+bash run_once.sh
+```
+generated model checkpoints will be saved to: `PRVIST/story_plotting/saved_model/`
+
+For pre-trained checkpotins: coming soon...!
+
+### B. Generating storyline:
+**Model Path Customization:**
+> Working directory: `PRVIST/story_plotting/script`
+Open the file: `run_generation.sh`
+Edit the `--path ../saved_model/HR_BiLSTM_plus_432 ` to your desire model path in saved_model/. 
+e.g.) change `--path ../saved_model/HR_BiLSTM_plus_432 ` to `--path  ../saved_model/HR_BiLSTM_plus_1`
+
+**Run UHop generation:**
+> Working directory: `PRVIST/story_plotting/script`
+```bash=
+bash run_generation.sh
+```
+
+The predicted storyline is saved to: `../generated_storylines/pred_terms_[......].json`
+
+Download our storyline via:
+> Working directory: `PRVIST/story_plotting/`
+```bash=
+bash download_example.sh
+unzip generated_storylines.zip
+```
