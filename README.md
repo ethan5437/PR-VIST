@@ -1,6 +1,12 @@
 # PR-VIST
 This repository is the implementation of PR-VIST
 **Plot and Rework: Modeling Storylines for Visual Storytelling**
+```
+pytorch==1.7.1
+python==3.7.6
+```
+## Environment
+
 
 ## Stage 0: Preparation
 ### Download dataset and knowledge graphs
