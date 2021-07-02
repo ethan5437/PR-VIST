@@ -20,7 +20,6 @@ python==3.7.6
   * VIST golden story
   * VIST golden story path
 
-Download them via:  
 > Working directory: `PRVIST/story_plotting/`
 ```bash=
 bash download_big_data.sh
@@ -51,7 +50,7 @@ bash run_generation.sh
 
 The predicted storyline is saved to: `../generated_storylines/pred_terms_[......].json`
 
-Download our storyline via:
+**Download our storyline via:**
 > Working directory: `PRVIST/story_plotting/`
 ```bash=
 bash download_example.sh
