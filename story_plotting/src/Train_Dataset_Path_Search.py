@@ -8,8 +8,8 @@ import itertools
 from Candidate_Termset_Manager import Candidate_Termset_Manager_Train
 # random.seed(1111)
 U_PATH = {}
-U_PATH['vist'] = '/home/EthanHsu/commen-sense-storytelling/UHop/data/VIST'
-U_PATH['vist_no_pos'] = '/home/EthanHsu/commen-sense-storytelling/UHop/data/VIST'
+U_PATH['vist'] = '../data/VIST'
+U_PATH['vist_no_pos'] = '../data/VIST'
 
 class Train_Dataset_Path_Search():
     '''
@@ -59,28 +59,14 @@ class Train_Dataset_Path_Search():
             
         if args.is_image_abs_position:
             golden_path = golden_path + '_abs'
-        if args.is_start_end_frame:
-            golden_path = golden_path + '_start_end_frame'
-        if args.story_noun_query:
-            golden_path = golden_path + '_story_noun'
-        if args.is_story_noun_candidate:
-            golden_path = golden_path + '_candidate_story_noun'
-        if args.ten_obj:
-            golden_path = golden_path+'10'
-        if args.no_reverse:
-            golden_path = golden_path+'_no_reverse'
         golden_path = golden_path+'.json'
         print(f'loading {golden_path}...')
-        with open(f'{file_path}/VIST/{golden_path}') as f:
+        with open(f'{file_path}/Golden/{golden_path}') as f:
             self.golden_path_data = json.load(f)
 
         print('loading relation graph...')
-        if args.no_reverse:
-            with open(f'{file_path}/KG_Relations/KG_VIST_Graph_no_reverse.json') as f:
-                self.graph_dict = json.load(f)
-        else:    
-            with open(f'{file_path}/KG_Relations/KG_VIST_Graph_top{args.relation_frequency}.json') as f:
-                self.graph_dict = json.load(f)
+        with open(f'{file_path}/KG_Relations/KG_Multi_Graph_top{args.relation_frequency}.json') as f:
+            self.graph_dict = json.load(f)
     
     def __getitem__(self, index):   
 #         random.seed(1111)
@@ -240,9 +226,9 @@ class Train_Dataset_Path_Search():
 
                     
 if __name__ == '__main__':
-    with open('/home/EthanHsu/commen-sense-storytelling/UHop/data/VIST/rela2id_abs.json', 'r') as f:
+    with open('../data/VIST/rela2id_abs.json', 'r') as f:
         rela2id =json.load(f)
-    word2id_path = '/home/EthanHsu/commen-sense-storytelling/UHop/data/glove.300d.word2id.json' 
+    word2id_path = '../data/glove.300d.word2id.json' 
     with open(word2id_path, 'r') as f:
         word2id = json.load(f)
     class ARGS():
