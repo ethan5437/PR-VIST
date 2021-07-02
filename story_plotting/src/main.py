@@ -240,12 +240,12 @@ if args.framework == 'UHop':
         term_path = args.term_path
         filename = args.path.split('/')[-1]
         filename = get_output_name(filename, args)
-        if not os.path.exists('./generated_storylines/'):
-            os.makedirs('./generated_storylines/')
+        if not os.path.exists('../generated_storylines/'):
+            os.makedirs('../generated_storylines/')
     
-        output_file_name = f'./generated_storylines/pred_terms_{filename}_{term_path}_{args.file_type}.json'
+        output_file_name = f'../generated_storylines/pred_terms_{filename}_{term_path}_{args.file_type}.json'
 #         output_file_scores_name = f'../data/generated_terms/pred_scores_{filename}_{term_path}.json'
-        output_file_rela_name = f'./generated_storylines/pred_relations_{filename}_{term_path}_{args.file_type}.json'
+        output_file_rela_name = f'../generated_storylines/pred_relations_{filename}_{term_path}_{args.file_type}.json'
         print('output_file_name',output_file_name)
         uhop = Generation_Framework(args, word2id, rela2id)
         output, output_with_scores, output_rela = uhop.generation(model=None, mode='generation', dataset=None, output_result=True)
