@@ -99,9 +99,6 @@ parser.add_argument('--graph_choice', choices=['multi-graph', 'vg-graph', 'vist-
 
 args = parser.parse_args()
 print(f'args: {args}')
-
-FILE_PATH = '/home/EthanHsu/commen-sense-storytelling/UHop/'
-
 # if args.is_image_abs_position:
 #     if not  args.is_seperate_structural:
 #         raise ValueError('is_seperate_structural must be true if is_image_abs_position is true')
@@ -184,16 +181,16 @@ elif args.framework == 'UHop':
     elif args.dataset.lower() == 'vist':
         if args.is_image_abs_position:
             if args.is_start_end_frame:
-                with open(f'{FILE_PATH}/data/VIST/rela2id_abs_start_end_frame.json', 'r') as f:
+                with open(f'../data/VIST/rela2id_abs_start_end_frame.json', 'r') as f:
                     rela2id =json.load(f)   
             else:
-                with open(f'{FILE_PATH}/data/VIST/rela2id_abs.json', 'r') as f:
+                with open(f'../data/VIST/rela2id_abs.json', 'r') as f:
                     rela2id =json.load(f)
         else:
-            with open(f'{FILE_PATH}/data/VIST/rela2id.json', 'r') as f:
+            with open(f'../data/VIST/rela2id.json', 'r') as f:
                 rela2id =json.load(f)
     elif args.dataset.lower() == 'vist_no_pos':
-        with open(f'{FILE_PATH}/data/VIST/rela2id.json', 'r') as f:
+        with open(f'../data/VIST/rela2id.json', 'r') as f:
             rela2id =json.load(f)
     else:
         raise ValueError('Unknown dataset.')
@@ -201,8 +198,8 @@ elif args.framework == 'UHop':
 #print(rela2id)
 #print(rela2id['scientist'])
 #exit()
-word2id_path = f'{FILE_PATH}/data/glove.300d.word2id.json' if args.emb_size == 300 else f'{FILE_PATH}/data/glove.50d.word2id.json' 
-word_emb_path = f'{FILE_PATH}/data/glove.300d.word_emb.npy' if args.emb_size == 300 else f'{FILE_PATH}/data/glove.50d.word_emb.npy'
+word2id_path = f'../data/glove.300d.word2id.json' if args.emb_size == 300 else f'../data/glove.50d.word2id.json' 
+word_emb_path = f'../data/glove.300d.word_emb.npy' if args.emb_size == 300 else f'../data/glove.50d.word_emb.npy'
 with open(word2id_path, 'r') as f:
     word2id = json.load(f)
 word_emb = np.load(word_emb_path)
