@@ -38,6 +38,7 @@ For pre-trained checkpotins: coming soon...!
 ### B. Generating storyline:
 **Model Path Customization:**
 > Working directory: `PRVIST/story_plotting/script`
+
 Open the file: `run_generation.sh`
 Edit the `--path ../saved_model/HR_BiLSTM_plus_432 ` to your desire model path in saved_model/. 
 e.g.) change `--path ../saved_model/HR_BiLSTM_plus_432 ` to `--path  ../saved_model/HR_BiLSTM_plus_1`
