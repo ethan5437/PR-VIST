@@ -210,10 +210,10 @@ class Prediction_Path_Search(Dataset):
 
         
 if __name__ == '__main__':
-
-    with open('/home/EthanHsu/commen-sense-storytelling/UHop/data/VIST/rela2id_abs.json', 'r') as f:
+    file_path = U_PATH[args.dataset]
+    with open(f'{file_path}/rela2id_abs.json', 'r') as f:
         rela2id =json.load(f)
-    word2id_path = '/home/EthanHsu/commen-sense-storytelling/UHop/data/glove.300d.word2id.json' 
+    word2id_path = f'{file_path}/glove.300d.word2id.json' 
     with open(word2id_path, 'r') as f:
         word2id = json.load(f)
     class ARGS():
