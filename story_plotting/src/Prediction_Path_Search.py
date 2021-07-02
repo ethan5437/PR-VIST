@@ -38,22 +38,22 @@ class Prediction_Path_Search(Dataset):
             self.origin_test_data = json.load(file) 
 
         obj_num = '5'
-        with open(f'{file_path}/KG_Relations/VIST_newobj_objs_NOUN_{obj_num}.json') as file:
+        with open(f'{file_path}/External_datasets/VIST_newobj_objs_NOUN_{obj_num}.json') as file:
             self.noun_data = json.load(file)
         
         print('image2term ouptut...')
-        with open(f'{file_path}/KG_Relations/image2term_new_obj_{args.file_type}.json') as file:
+        with open(f'{file_path}/External_datasets/image2term_new_obj_{args.file_type}.json') as file:
             self.predicted_terms = json.load(file)
         
         print('_get_data...')
         self.data_objs = self._get_data(args, mode, word2id, rela2id)
         print('get_graph_dict...')
         if self.args.graph_choice == 'multi-graph':
-            graph_path = f'{file_path}/KG_Relations/KG_Multi_Graph_top{args.relation_frequency}.json'
+            graph_path = f'{file_path}/External_datasets/KG_Multi_Graph_top{args.relation_frequency}.json'
         elif self.args.graph_choice == 'vg-graph':
-            graph_path = f'{file_path}/KG_Relations/KG_VG_Graph_top{args.relation_frequency}.json'
+            graph_path = f'{file_path}/External_datasets/KG_VG_Graph_top{args.relation_frequency}.json'
         elif self.args.graph_choice == 'vist-graph':
-            graph_path = f'{file_path}/KG_Relations/KG_VIST_Graph_top{args.relation_frequency}.json'
+            graph_path = f'{file_path}/External_datasets/KG_VIST_Graph_top{args.relation_frequency}.json'
         with open(graph_path) as f:
             self.graph_dict = json.load(f)   
             
