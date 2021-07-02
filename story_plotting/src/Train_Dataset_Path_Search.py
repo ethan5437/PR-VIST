@@ -65,7 +65,7 @@ class Train_Dataset_Path_Search():
             self.golden_path_data = json.load(f)
 
         print('loading relation graph...')
-        with open(f'{file_path}/KG_Relations/KG_Multi_Graph_top{args.relation_frequency}.json') as f:
+        with open(f'{file_path}/External_datasets/KG_Multi_Graph_top{args.relation_frequency}.json') as f:
             self.graph_dict = json.load(f)
     
     def __getitem__(self, index):   
