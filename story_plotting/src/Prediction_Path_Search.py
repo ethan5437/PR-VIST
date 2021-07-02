@@ -18,8 +18,8 @@ from Candidate_Termset_Manager import Candidate_Termset_Manager_Prediction, Voca
 random.seed(1111)
 
 U_PATH = {}
-U_PATH['vist'] = '/home/EthanHsu/commen-sense-storytelling/UHop/data/VIST'
-U_PATH['vist_no_pos'] = '/home/EthanHsu/commen-sense-storytelling/UHop/data/VIST'
+U_PATH['vist'] = '../data/VIST'
+U_PATH['vist_no_pos'] = '../data/VIST'
 
 class Prediction_Path_Search(Dataset):
     def __init__(self, args, mode, word2id, rela2id):
@@ -34,29 +34,16 @@ class Prediction_Path_Search(Dataset):
         self.remove_set = ['Frame','NOUN','<empty-frame>','inner','inter', '<end-frame>', '<start-frame>']
        
         print('loading origin test data...')
-        with open(f'{file_path}/VIST/VIST_coref_nos_mapped_frame_noun_{args.file_type}_list.json') as file:
+        with open(f'{file_path}/Golden/VIST_coref_nos_mapped_frame_noun_{args.file_type}_list.json') as file:
             self.origin_test_data = json.load(file) 
 
-        print('loading noun data...')
-        if self.args.ten_obj:
-            obj_num = '10'
-        else:
-            obj_num = '5'
+        obj_num = '5'
         with open(f'{file_path}/KG_Relations/VIST_newobj_objs_NOUN_{obj_num}.json') as file:
             self.noun_data = json.load(file)
         
         print('image2term ouptut...')
-        if args.term_path == 'AAAI':
-            with open(f'{file_path}/KG_Relations/image2term_{args.file_type}.json') as file:
-                self.predicted_terms = json.load(file)
-        elif args.term_path == 'new_obj':
-            with open(f'{file_path}/KG_Relations/image2term_new_obj_{args.file_type}.json') as file:
-                self.predicted_terms = json.load(file)
-        elif args.term_path == 'noun_only':
-            with open(f'{file_path}/KG_Relations/image2term_noun_{args.file_type}.json') as file:
-                self.predicted_terms = json.load(file)
-        else:
-            raise ValueError('image2term not found!!')
+        with open(f'{file_path}/KG_Relations/image2term_new_obj_{args.file_type}.json') as file:
+            self.predicted_terms = json.load(file)
         
         print('_get_data...')
         self.data_objs = self._get_data(args, mode, word2id, rela2id)
@@ -70,8 +57,7 @@ class Prediction_Path_Search(Dataset):
         with open(graph_path) as f:
             self.graph_dict = json.load(f)   
             
-        with open("/home/EthanHsu/commen-sense-storytelling/data/term2story_vocabs/term_vocab_reverse.pkl",'rb') as f:
-        #with open("../../event-visual-storytelling/data/ROC_Frame_vocab.pkl",'rb') as f:
+        with open(f"../../story_reworking/term2sentence_lstm/term_vocab.pkl",'rb') as f:
             self.frame_vocab = pickle.load(f)
     
     def _get_data(self, args, mode, word2id, rela2id):
