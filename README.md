@@ -14,7 +14,7 @@ This repository is the implementation of PR-VIST
   * VIST golden story
   * VIST golden story path
 
-Download data via:  
+Download them via:  
 ```bash=
 cd story_plotting
 bash download_big_data.sh
