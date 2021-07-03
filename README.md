@@ -33,27 +33,23 @@ bash run_once.sh
 ```
 generated model checkpoints will be saved to: `PRVIST/story_plotting/saved_model/`
 
-For pre-trained checkpotins: coming soon...!
+For pre-trained checkpoints: coming soon...!
 
 ### B. Generating storyline:
-**Model Path Customization:**
 > Working directory: `PRVIST/story_plotting/script`
-
 Open the file: `run_generation.sh`
 
 Edit the `--path ../saved_model/HR_BiLSTM_plus_432 ` to your desire model path. 
 
 e.g.) change `--path ../saved_model/HR_BiLSTM_plus_432 ` to `--path  ../saved_model/HR_BiLSTM_plus_1`
 
-**Run UHop generation:**
-> Working directory: `PRVIST/story_plotting/script`
 ```bash=
 bash run_generation.sh
 ```
 
 The predicted storyline is saved to: `../generated_storylines/pred_terms_[......].json`
 
-**Download our storyline via:**
+**Download our predicted storyline via:**
 > Working directory: `PRVIST/story_plotting/`
 ```bash=
 bash download_example.sh
