@@ -1,0 +1,3 @@
+#!/bin/bash
+set -x
+python train.py -log $2 -save_model trained -save_mode best -label_smoothing -device $1 -hop 1.5 -loss_level hierarchical -is_story_discriminator
