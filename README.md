@@ -35,7 +35,7 @@ generated model checkpoints will be saved to: `PRVIST/story_plotting/saved_model
 
 For pre-trained checkpoints: coming soon...!
 
-### B. Generating storyline:
+### B. Generating Storyline:
 > Working directory: `PRVIST/story_plotting/script`
 Open the file: `run_generation.sh`
 
@@ -49,8 +49,9 @@ bash run_generation.sh
 
 The predicted storyline will be saved to: `../generated_storylines/pred_terms_[......].json`
 
-**Download our predicted storyline via:**
+### C. Download Predicted Storyline:
 > Working directory: `PRVIST/story_plotting/`
+To download the predicted storyline in the paper:
 ```bash=
 bash download_example.sh
 unzip generated_storylines.zip
