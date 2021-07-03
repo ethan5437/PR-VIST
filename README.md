@@ -51,7 +51,9 @@ The predicted storyline will be saved to: `../generated_storylines/pred_terms_[.
 
 ### C. Download Predicted Storyline:
 > Working directory: `PRVIST/story_plotting/`
+
 To download the predicted storyline in the paper:
+
 ```bash=
 bash download_example.sh
 unzip generated_storylines.zip
