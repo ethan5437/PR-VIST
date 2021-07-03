@@ -41,7 +41,7 @@ For pre-trained checkpotins: coming soon...!
 
 Open the file: `run_generation.sh`
 
-Edit the `--path ../saved_model/HR_BiLSTM_plus_432 ` to your desire model path in saved_model/. 
+Edit the `--path ../saved_model/HR_BiLSTM_plus_432 ` to your desire model path. 
 
 e.g.) change `--path ../saved_model/HR_BiLSTM_plus_432 ` to `--path  ../saved_model/HR_BiLSTM_plus_1`
 
