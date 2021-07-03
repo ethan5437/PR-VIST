@@ -47,7 +47,7 @@ e.g.) change `--path ../saved_model/HR_BiLSTM_plus_432 ` to `--path  ../saved_mo
 bash run_generation.sh
 ```
 
-The predicted storyline is saved to: `../generated_storylines/pred_terms_[......].json`
+The predicted storyline will be saved to: `../generated_storylines/pred_terms_[......].json`
 
 **Download our predicted storyline via:**
 > Working directory: `PRVIST/story_plotting/`
