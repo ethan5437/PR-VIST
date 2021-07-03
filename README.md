@@ -58,5 +58,5 @@ To download the predicted storyline in the paper:
 bash download_example.sh
 unzip generated_storylines.zip
 ```
-## Stage 1: Story Reworking
+## Stage 2: Story Reworking
 coming soon...
