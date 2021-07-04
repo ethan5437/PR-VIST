@@ -135,6 +135,6 @@ output filename = f'generated_story/TransLSTM{str(opt.hop)}_{model_path}_term_{t
 I would upload the rest of the model checkpoints in the future!
 
 ### Stage 1
-* If your UHop training is very slow, it's perfectly normal!!! I tooke roughly a day to train an epoch. It's not very computationally efficient, but it's probably one of the fastest framework avaliable.
+* If your UHop training is very slow, it's perfectly normal!!! I took roughly a day to train an epoch. It's not very computationally efficient, but it's probably one of the fastest framework avaliable.
 * I tried training with several different parameter settings (not all, because it's very computationally expensive), and it seems **unlikely to have any effect on model performance**.
 
