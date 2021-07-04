@@ -1,6 +1,6 @@
 # PR-VIST
 This repository is the implementation of PR-VIST
-**Plot and Rework: Modeling Storylines for Visual Storytelling (ACL2021 Findings)**
+**Plot and Rework: Modeling Storylines for Visual Storytelling (ACL-IJCNLP2021 Findings)**
 
 ## Environment
 ```
