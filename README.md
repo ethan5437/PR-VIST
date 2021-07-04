@@ -4,8 +4,8 @@ This repository is the implementation of PR-VIST:
 **Plot and Rework: Modeling Storylines for Visual Storytelling (ACL-IJCNLP2021 Findings)**
 
 ### Generated Stories
+> Working directory: `PRVIST/generated_stories/`
 ```bash=
-cd generated_stories
 unzip PR_VIST.json.zip
 ```
 `predicted_story` is the whole story predicted by PR-VIST
