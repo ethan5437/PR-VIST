@@ -78,13 +78,13 @@ class TermDataset(Dataset):
 
 
           
-with open('/home/wei0401/commen-sense-storytelling/user_score/story_vocab.pkl','rb') as f_voc:
+with open('../data/term2story_vocabs/story_vocab.pkl','rb') as f_voc:
     story_vocab = pickle.load(f_voc) 
 
-with open('/home/wei0401/commen-sense-storytelling/user_score/data/pos_neg_story_withimg.json') as f_pos_neg:
+with open('../data/human_ranking/pos_neg_story_withimg.json') as f_pos_neg:
     pos_neg = json.load(f_pos_neg)
 
-with open('/home/wei0401/commen-sense-storytelling/user_score/data/pos_neg_story_withoutimg.json') as f_pos_neg_2:
+with open('../data/human_ranking/pos_neg_story_withoutimg.json') as f_pos_neg_2:
     pos_neg_2 = json.load(f_pos_neg_2)
 
 
@@ -157,8 +157,8 @@ dis_optimizer = optim.Adam(dis.parameters(), lr=1e-5)
 model_description = '3-b-B-ep100-len200-2'
 best_val_loss = None
 best_val_acc = None
-trained_dis_path = '/home/wei0401/commen-sense-storytelling/user_score/saved_model/'
-val_log_path = '/home/wei0401/commen-sense-storytelling/user_score/log/val_log_{}.txt'.format(model_description) 
+trained_dis_path = 'saved_model/'
+val_log_path = 'log/val_log_{}.txt'.format(model_description) 
 val_log = open(val_log_path, "a+")
 val_log.write("LOSS ACC SAVE?")
 val_log.write("\n")
@@ -234,12 +234,9 @@ for epoch in range(MAX_EPOCH):
 print("......Finish discriminator training......")
 print("best model loss: {} , acc: {}".format(best_val_loss, best_val_acc))
 
-
-
-
 '''
 dis = discriminator.Discriminator(DIS_EMBEDDING_DIM, DIS_HIDDEN_DIM, VOCAB_SIZE, MAX_SEQ_LEN, gpu=CUDA)
-dis.load_state_dict(torch.load('/home/wei0401/commen-sense-storytelling/user_score/saved_model/model_minloss-3-b-B-ep100'))
+dis.load_state_dict(torch.load('saved_model/model_minloss-3-b-B-ep100'))
 # gen = generator.Generator(GEN_EMBEDDING_DIM, GEN_HIDDEN_DIM, VOCAB_SIZE, MAX_SEQ_LEN, gpu=CUDA)
 if CUDA:
     # gen = gen.cuda()
