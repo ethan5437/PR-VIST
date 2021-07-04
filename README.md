@@ -1,7 +1,7 @@
 # PR-VIST
 This repository is the implementation of PR-VIST:
 
-**Plot and Rework: Modeling Storylines for Visual Storytelling (ACL-IJCNLP2021 Findings)**
+[**Plot and Rework: Modeling Storylines for Visual Storytelling (ACL-IJCNLP2021 Findings)**](https://arxiv.org/abs/2105.06950)
 
 ### Generated Stories
 > Working directory: `PRVIST/generated_stories/`
