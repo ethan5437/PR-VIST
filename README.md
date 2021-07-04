@@ -45,6 +45,7 @@ generated model checkpoints will be saved to: `PRVIST/story_plotting/saved_model
 
 ### B. Generating Storyline:
 > Working directory: `PRVIST/story_plotting/script`
+
 Open the file: `run_generation.sh`
 
 Edit the `--path ../saved_model/HR_BiLSTM_plus_432 ` to your desire model path. 
@@ -60,7 +61,7 @@ The predicted storyline will be saved to: `../generated_storylines/pred_terms_[.
 ### C. Download Predicted Storyline:
 > Working directory: `PRVIST/story_plotting/`
 
-To download the predicted storyline in the paper:
+Download the predicted storyline in this paper:
 
 ```bash=
 bash download_example.sh
@@ -90,7 +91,7 @@ unzip data.zip
 bash run.sh [YOUR_DEVICE_NUMVER] roc
 ```
 e.g., 
-if you want to train on GPU device 0** 
+if you want to train on GPU device 0
 ```bash=
 bash run.sh 0 roc
 ```
@@ -131,9 +132,9 @@ output filename = f'generated_story/TransLSTM{str(opt.hop)}_{model_path}_term_{t
 
 ---
 ## Side notes:
-I would upload the model checkpoints in the future!
+I would upload the rest of the model checkpoints in the future!
 
 ### Stage 1
-* If your UHop training phase is very slow, it's perfectly normal!!! I tooke roughly a day to train an epoch. It's not very computationally efficient, but it's probably one of the fastest framework avaliable.
+* If your UHop training is very slow, it's perfectly normal!!! I tooke roughly a day to train an epoch. It's not very computationally efficient, but it's probably one of the fastest framework avaliable.
 * I tried training with several different parameter settings (not all, because it's very computationally expensive), and it seems **unlikely to have any effect on model performance**.
 
