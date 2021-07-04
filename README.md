@@ -83,7 +83,7 @@ bash download_checkpoint.sh
 unzip data.zip
 ```
 
- ### A. Pre-Train Transformer with ROC Story dataset
+ ### C. Pre-Train Transformer with ROC Story dataset
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
@@ -98,7 +98,7 @@ bash run.sh 0 roc
 
 the trained model checkpoint is saved to: `save_model_BIO_[TODAY's DATE]/trained.chkpt`
 
-### B. Finetuning on VIST dataset
+### D. Finetuning on VIST dataset
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
@@ -116,7 +116,7 @@ the trained model checkpoint is saved to: `save_model_BIO_[TODAY’s DATE]_hiera
 `
 where xx.xxx = validation perplexity
 
-### C. Story Generation
+### E. Story Generation
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
