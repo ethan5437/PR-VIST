@@ -7,6 +7,12 @@ This repository is the implementation of PR-VIST
 pytorch==1.7.1
 python==3.7.6
 ```
+### generated_stories
+```bash=
+cd generated_stories
+unzip PR_VIST.json.zip
+```
+> `predicted_story` is the whole story predicted by PR-VIST
 
 ## Stage 0: Preparation
 ### Download dataset and knowledge graphs
