@@ -87,7 +87,6 @@ unzip data.zip
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
-cd story_reworking/term2sentence_lstm/
 bash run.sh [YOUR_DEVICE_NUMVER] roc
 ```
 e.g., 
