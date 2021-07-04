@@ -2,17 +2,18 @@
 This repository is the implementation of PR-VIST
 **Plot and Rework: Modeling Storylines for Visual Storytelling (ACL-IJCNLP2021 Findings)**
 
-## Environment
-```
-pytorch==1.7.1
-python==3.7.6
-```
 ### generated_stories
 ```bash=
 cd generated_stories
 unzip PR_VIST.json.zip
 ```
 > `predicted_story` is the whole story predicted by PR-VIST
+
+## Environment
+```
+pytorch==1.7.1
+python==3.7.6
+```
 
 ## Stage 0: Preparation
 ### Download dataset and knowledge graphs
