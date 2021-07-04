@@ -249,3 +249,4 @@ if __name__ == "__main__":
         e.g. [[[198, 118, 31, 1528, 104, 19, 2, 340, 24, 31, 710, 446, 45, 19, 2, 198, 218, 230, 3076, 19, 2, 20, 527, 175, 38, 390, 19, 2, 198, 736, 230, 142, 19, 7]]]
         which equals to 'i visited a small town . there was a table set up . i found some books . the man looked at me . i played some games .' 
     '''
+        
