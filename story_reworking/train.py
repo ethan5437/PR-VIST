@@ -27,7 +27,6 @@ from datetime import date
 def cal_performance(pred, gold, loss_level='sentence', smoothing=False):
 #     smoothing = False
     ''' Apply label smoothing if needed '''
-    
     ###LSTM (Concatenation) Modification
     gold_zeros = torch.zeros(gold.size(0),1, device=gold.device, dtype = gold.dtype)
     gold = torch.cat((gold,gold_zeros),1)
@@ -407,11 +406,6 @@ def eval_epoch(model, validation_data, device, Dataloader, opt, discriminator):
 
                 #LSTM Modification
                 pred = model(frame[i], frame_pos[i], frame_sen_pos[i], targets[i], targets_pos[i], targets_sen_pos[i], previous_targets[:i+1],story_len)
-        
-        
-                ###LSTM (Concatenation) Modification
-                gold_zeros = torch.zeros(gold.size(0),1, device=gold.device, dtype = gold.dtype)
-                gold = torch.cat((gold_zeros,gold),1)
                 
                 # backward
                 if opt.loss_level == 'sentence' or opt.loss_level == 'hierarchical':
@@ -498,7 +492,7 @@ def eval_epoch(model, validation_data, device, Dataloader, opt, discriminator):
 
 
     ''' Start training '''
-def train(model, training_data, validation_data, vist_train_data, vist_val_data, vg_train_data, vg_val_data, optimizer, device, opt, Dataloader, discriminator):
+def train(model, training_data, validation_data, vist_train_data, vist_val_data, optimizer, device, opt, Dataloader, discriminator):
     today = date.today()
     today_time = today.strftime("%b-%d-%Y")
     #early_stopping = EarlyStopping(patience=10, verbose=False) 
@@ -507,7 +501,6 @@ def train(model, training_data, validation_data, vist_train_data, vist_val_data,
     log_dir = "./log/roc_run_all"
     if opt.model != None: log_dir = log_dir + "_pretrain"
     if opt.vist: log_dir = log_dir + "_vist"
-    if opt.vg: log_dir = log_dir + "_vg"
 
     if opt.log:
         log_train_file = log_dir+ str(opt.hop) + opt.log + 'Frame1' + '.train.log'
@@ -521,14 +514,12 @@ def train(model, training_data, validation_data, vist_train_data, vist_val_data,
             log_vf.write('epoch,loss,ppl,accuracy\n')
 
     valid_accus = []
+    valid_losses = []
     for epoch_i in range(opt.epoch):
         print('[ Epoch', epoch_i, ']')
 
-        start = time.time()
-        if opt.vg and opt.vist:
-            train_loss, train_accu = train_visual_genome_epoch(
-                model, training_data, vist_train_data, vg_train_data, optimizer, device, smoothing=opt.label_smoothing, Dataloader=Dataloader, opt=opt)      
-        elif opt.vist:
+        start = time.time() 
+        if opt.vist:
             train_loss, train_accu = train_vist_epoch(
                 model, training_data, vist_train_data, optimizer, device, smoothing=opt.label_smoothing, Dataloader=Dataloader, opt=opt, discriminator=discriminator)
         else:
@@ -540,9 +531,7 @@ def train(model, training_data, validation_data, vist_train_data, vist_val_data,
                   elapse=(time.time()-start)/60))
 
         start = time.time()
-        if opt.vg and opt.vist:
-            valid_loss, valid_accu = eval_epoch(model, vg_val_data, device, Dataloader, opt, discriminator)
-        elif opt.vist:
+        if opt.vist:
             valid_loss, valid_accu = eval_epoch(model, vist_val_data, device, Dataloader, opt, discriminator)
         else:
             valid_loss, valid_accu = eval_epoch(model, validation_data, device, Dataloader, opt, discriminator)
@@ -552,6 +541,7 @@ def train(model, training_data, validation_data, vist_train_data, vist_val_data,
                     elapse=(time.time()-start)/60))
 
         valid_accus += [valid_accu]
+        valid_losses += [valid_loss]
 
         model_state_dict = model.state_dict()
         checkpoint = {
@@ -570,17 +560,16 @@ def train(model, training_data, validation_data, vist_train_data, vist_val_data,
                 
             if opt.model != None: save_dir = save_dir + "_pretrain"
             if opt.vist: save_dir = save_dir + "_vist"
-            if opt.vg: save_dir = save_dir + "_vg"
             save_dir = save_dir + "/"
             print('save_dir',save_dir)
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
             if opt.save_mode == 'all':
-                model_name = save_dir + opt.save_model + '_accu_{accu:3.3f}.chkpt'.format(accu=100*valid_accu)
+                model_name = save_dir + opt.save_model + '_ppl_{ppl: 8.5f}.chkpt'.format(ppl=math.exp(min(valid_loss, 100)))
                 torch.save(checkpoint, model_name)
             elif opt.save_mode == 'best':
                 model_name = save_dir+opt.save_model + '.chkpt'
-                if valid_accu >= max(valid_accus):
+                if valid_loss <= min(valid_losses):
                     torch.save(checkpoint, model_name)
                     print('    - [Info] The checkpoint file has been updated.')
 
@@ -676,7 +665,7 @@ def main():
     torch.manual_seed(1234)
     Dataloader = Loaders(opt)
     Dataloader.get_loaders(opt)
-    training_data, validation_data, vist_train_data, vist_val_data, vg_train_data, vg_val_data = Dataloader.loader['train'], Dataloader.loader['val'], Dataloader.loader['vist_train'], Dataloader.loader['vist_val'], Dataloader.loader['vg_train'], Dataloader.loader['vg_val']
+    training_data, validation_data, vist_train_data, vist_val_data,  = Dataloader.loader['train'], Dataloader.loader['val'], Dataloader.loader['vist_train'], Dataloader.loader['vist_val']
 
     opt.src_vocab_size = len(Dataloader.frame_vocab)
     opt.tgt_vocab_size = len(Dataloader.story_vocab)
@@ -751,13 +740,13 @@ def main():
         MAX_SEQ_LEN = 200
 
         discriminator = discriminator_model.Discriminator(DIS_EMBEDDING_DIM, DIS_HIDDEN_DIM, VOCAB_SIZE, MAX_SEQ_LEN, device)
-        discriminator.load_state_dict(torch.load('/home/wei0401/commen-sense-storytelling/user_score/saved_model/model_minloss-3-b-B-ep100-emb512-1', map_location=device))
+        discriminator.load_state_dict(torch.load('discriminator/saved_model/model_minloss-3-b-B-ep100-emb512-1', map_location=device))
         discriminator = discriminator.to(device) 
     else:
         discriminator = None
     print('discriminator',discriminator)
 
-    train(transformer, training_data, validation_data, vist_train_data, vist_val_data, vg_train_data, vg_val_data, optimizer, device, opt, Dataloader, discriminator)
+    train(transformer, training_data, validation_data, vist_train_data, vist_val_data, optimizer, device, opt, Dataloader, discriminator)
 
 
 
