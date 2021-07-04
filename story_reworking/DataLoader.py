@@ -510,15 +510,6 @@ def ROC_collate_fn(data):
     hop = hop[0]
     max_frame_seq_len = 10 
     max_seq_len = 25
-#     max_sentence_len = 12
-#     max_story_seq_len = max_seq_len*max_sentence_len
-#     print('max_story_seq_len',max_story_seq_len)
-    
-    #lengths = [len(x)+1 for x in stories]
-#     print('frames[0]',len(frames[0]))
-#     frame_length = len(frames[0]) #5
-#     for f in stories:
-#         assert len(f) == len(frames[0]), f"len(f) {len(f)} != len(f[0]) {len(frames[0])}"
 
     for ss in stories:
         for s in ss:
@@ -567,9 +558,6 @@ def ROC_collate_fn(data):
         frame_pos = [[ss[i] + [Constants.PAD for _ in range(hop_max_frame_len-len(ss[i]))] for i,s in enumerate(ss)] for ss in f_word_pos]        
     
     elif hop == 1.5:  
-#         print('stories',stories[0][0])
-#         print('len(frames[0])',len(frames[0]))
-#         print('len(frames[0][0])',len(frames[0][0]))
         max_frame_length = 25
         hop_max_frame_len = max_frame_seq_len*max_frame_length+1
         hop_max_seq_len = max_seq_len*2
@@ -604,21 +592,11 @@ def ROC_collate_fn(data):
                                ss[i-1]+[Constants.PAD for _ in range(hop_max_seq_len - len(ss[i-1]))]][i!=0]\
                                for i,s in enumerate(ss)] for ss in stories]
         
-#         pad_all_stories = [s+ [Constants.EOS] + [Constants.PAD for _ in range(max_story_seq_len - len(s) - 1)] for s in ss for ss in stories]
-#         pad_all_stories = []
-#         for ss in stories:
-#             tmp_story = []
-#             for s in ss:
-#                 tmp_story+= s
-#             tmp_story = tmp_story + [Constants.EOS] + [Constants.PAD for _ in range(max_story_seq_len - len(tmp_story) - 1)]
-#             pad_all_stories.append(tmp_story)
-        
         all_frame = []
         for frame in frames:
             temp_frame = []
             for f in frame:
                 temp_frame+=f
-#             temp_frame += [Constants.EOS]
             all_frame.append([temp_frame]*len(frame))
             
         all_f_sen_pos = []
@@ -626,8 +604,6 @@ def ROC_collate_fn(data):
             temp_frame = []
             for f in frame:
                 temp_frame+=f
-#             temp_frame += [temp_frame[-1]]
-#             all_f_sen_pos.append([temp_frame]*len(frame))
             masked_frame = []
             for i in range(len(frame)):
                 frame_copy = copy.deepcopy(temp_frame)
@@ -649,221 +625,12 @@ def ROC_collate_fn(data):
         pad_f_sen_pos = [[s + [Constants.PAD for _ in range(hop_max_frame_len- len(s))] for i,s in enumerate(ss)] for ss in all_f_sen_pos]
         frame_pos = [[s + [Constants.PAD for _ in range(hop_max_frame_len - len(s))] for i,s in enumerate(ss)] for ss in all_f_word_pos]
         
-        
-    elif hop == 2:     
-        hop_max_frame_len = max_frame_seq_len+1
-        hop_max_seq_len = max_seq_len*3
-        
-        stories, s_sen_pos, s_word_pos, gold, frames, f_sen_pos, f_word_pos = pad_all_sequence(stories, s_sen_pos, s_word_pos, frames, f_sen_pos, f_word_pos, max_story_len, max_seq_len, max_frame_seq_len)
-        
-        target_length = len(stories[0]) #5
-        frame_length = len(frames[0]) #5
-        
-        pad_stories =  []
-        for ss in stories:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.BOS]+[Constants.EOS]+[Constants.BOS]+[Constants.EOS]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2 - (len(ss[i])-1))])
-                elif i == 1:
-                    sentence.extend([Constants.BOS]+[Constants.EOS]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]) - (len(ss[i])-1))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1])- (len(ss[i])-1))])
-                pad_story.append(sentence)
-                
-                assert len(sentence) == hop_max_seq_len, (str(i) + ',' + str(len(pad_story))+' v.s '+str(hop_max_seq_len))
-            pad_stories.append(pad_story)
-        #assert len(pad_stories) == 64, (str(len(pad_stories))+ '!= 64')
-            
-        pad_s_sen_pos = []    
-        for ss in s_sen_pos:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+[Constants.PAD]+[Constants.PAD]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2 - (len(ss[i])-1))])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]) - (len(ss[i])-1))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1])- (len(ss[i])-1))])
-                pad_story.append(sentence)
-            pad_s_sen_pos.append(pad_story)
-        #assert len(pad_s_sen_pos) == 64, (str(len(pad_s_sen_pos))+ '!= 64')
-            
-        stories_pos = []    
-        for ss in s_word_pos:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+[Constants.PAD]+[Constants.PAD]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2 - (len(ss[i])-1))])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]) - (len(ss[i])-1))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1])- (len(ss[i])-1))])
-                pad_story.append(sentence)
-            stories_pos.append(pad_story)
-        #assert len(stories_pos) == 64, (str(len(stories_pos)) + ' != 64')
-            
-                    
-        story_gold = []
-        for ss in gold:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+2*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 3 -(len(ss[i])))])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+(len(ss[i-1]))*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 1 - (len(ss[i-1])) -(len(ss[i])))])
-                else:
-                    sentence.extend((len(ss[i-2])-1)*[Constants.PAD]+(len(ss[i-1]))*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - (len(ss[i-2])-1) - (len(ss[i-1])) -(len(ss[i])))])
-                pad_story.append(sentence)
-            story_gold.append(pad_story)
-        #assert len(story_gold) == 64, (str(len(story_gold)) + ' != 64')
-            
-        pad_frame = [[ss[i] +[Constants.PAD for _ in range(hop_max_frame_len-len(ss[i]))] for i,s in enumerate(ss)] for ss in frames]
-        pad_f_sen_pos = [[ss[i] + [Constants.PAD for _ in range(hop_max_frame_len-len(ss[i]))] for i,s in enumerate(ss)] for ss in f_sen_pos]
-        frame_pos = [[ss[i] + [Constants.PAD for _ in range(hop_max_frame_len-len(ss[i]))] for i,s in enumerate(ss)] for ss in f_word_pos]                                
-        
-    elif hop == 2.5:    
-        max_frame_length = 25
-        
-        hop_max_frame_len = max_frame_seq_len*max_frame_length+1
-        hop_max_seq_len = max_seq_len*3
-        
-        stories, s_sen_pos, s_word_pos, gold, frames, f_sen_pos, f_word_pos = pad_all_sequence(stories, s_sen_pos, s_word_pos, frames, f_sen_pos, f_word_pos, max_story_len, max_seq_len, max_frame_seq_len)
-
-        pad_stories =  []
-        for ss in stories:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.BOS]+[Constants.EOS]+[Constants.BOS]+[Constants.EOS]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2 - (len(ss[i])-1))])
-                elif i == 1:
-                    sentence.extend([Constants.BOS]+[Constants.EOS]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]) - (len(ss[i])-1))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1])- (len(ss[i])-1))])
-                pad_story.append(sentence)
-                assert len(sentence) == hop_max_seq_len, (str(i) + ',' + str(len(pad_story))+' v.s '+str(hop_max_seq_len))
-            pad_stories.append(pad_story)
-            
-        pad_s_sen_pos = []    
-        for ss in s_sen_pos:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+[Constants.PAD]+[Constants.PAD]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2 - (len(ss[i])-1))])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]) - (len(ss[i])-1))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1])- (len(ss[i])-1))])
-                pad_story.append(sentence)
-            pad_s_sen_pos.append(pad_story)
-            
-        stories_pos = []    
-        for ss in s_word_pos:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+[Constants.PAD]+[Constants.PAD]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2 - (len(ss[i])-1))])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]) - (len(ss[i])-1))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1]+ ss[i][:-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1])- (len(ss[i])-1))])
-                pad_story.append(sentence)
-            stories_pos.append(pad_story)
-            
-                    
-        story_gold = []
-        for ss in gold:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+2*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 3 -(len(ss[i])))])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+(len(ss[i-1]))*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 1 - (len(ss[i-1])) -(len(ss[i])))])
-                else:
-                    sentence.extend((len(ss[i-2])-1)*[Constants.PAD]+(len(ss[i-1]))*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - (len(ss[i-2])-1) - (len(ss[i-1])) -(len(ss[i])))])
-                pad_story.append(sentence)
-            story_gold.append(pad_story)
-        
-        all_frame = []
-        for frame in frames:
-            temp_frame = []
-            for f in frame:
-                temp_frame+=f
-            temp_frame += [Constants.EOS]
-            all_frame.append([temp_frame]*len(frame))
-            
-        all_f_sen_pos = []
-        for frame in f_sen_pos:
-            temp_frame = []
-            for f in frame:
-                temp_frame+=f
-            temp_frame += [temp_frame[-1]]
-            masked_frame = []
-            for i in range(len(frame)):
-                frame_copy = copy.deepcopy(temp_frame)
-                frame_copy = np.array(frame_copy)
-                frame_copy[frame_copy != (i+1)] = 0
-                masked_frame.append(frame_copy.tolist())
-            all_f_sen_pos.append(masked_frame)
-            
-        all_f_word_pos = []
-        for frame in f_word_pos:
-            temp_frame = []
-            for f in frame:
-                temp_frame+=f
-            temp_frame += [temp_frame[-1]+1]
-            all_f_word_pos.append([temp_frame]*len(frame))
-                
-        pad_frame  = [[s + [Constants.PAD for _ in range(hop_max_frame_len - len(s))] for i,s in enumerate(ss)] for ss in all_frame]
-        pad_f_sen_pos = [[s + [Constants.PAD for _ in range(hop_max_frame_len- len(s))] for i,s in enumerate(ss)] for ss in all_f_sen_pos]
-        frame_pos = [[s + [Constants.PAD for _ in range(hop_max_frame_len - len(s))] for i,s in enumerate(ss)] for ss in all_f_word_pos]
-    
-        
     #lengths = torch.LongTensor(lengths).view(-1,1)
     targets = torch.LongTensor(pad_stories).view(-1, target_length, hop_max_seq_len)
     targets_pos = torch.LongTensor(stories_pos).view(-1, target_length, hop_max_seq_len)
     targets_sen_pos = torch.LongTensor(pad_s_sen_pos).view(-1, target_length, hop_max_seq_len)
     targets_gold = torch.LongTensor(story_gold).view(-1, target_length, hop_max_seq_len)
     previous_targets = torch.LongTensor(previous_stories).view(-1, target_length, hop_max_seq_len)
-    
-    
-#     print('pad_all_stories',len(pad_all_stories))
-#     print('pad_all_stories',len(pad_all_stories[0]))
-#     print('max_story_seq_len',max_story_seq_len)
-#     targets_all = torch.LongTensor(pad_all_stories).view(-1, max_story_seq_len)
-#     print('targets_all',targets_all.shape)
 
     #frame_lengths = torch.LongTensor(frame_lengths).view(-1,1)
     frame = torch.LongTensor(pad_frame).view(-1,frame_length,hop_max_frame_len)
@@ -890,55 +657,7 @@ def ROC_collate_test_fn(data):
 #     print('ROC_collate_test_fn--frames',frames)
     if frames == ([],) and f_sen_pos == ([],) and f_word_pos == ([],):
         return [], [], [], [], [], [], [], [], []
-#     '''
-#     toy set
-#     '''
-#     frames = [[[2, 55],[2, 395],[2,   26],[2, 278],[2, 85]]]
-#     f_sen_pos[0].append([7, 7, 7])
-#     f_word_pos[0].append([1, 2, 3])
-
-
-#     '''
-#     testing
-#     +1
-#     '''
-#     stories[0].append([2,51,52,53,54,55,7])
-#     s_sen_pos[0].append([7,7,7,7,7,7,7])
-#     s_word_pos[0].append([1,2,3,4,5,6,7])
-#     frames[0].append([2, 55, 56])
-#     f_sen_pos[0].append([7, 7, 7])
-#     f_word_pos[0].append([1, 2, 3])
-#     '''
-#     testing
-#     +2
-#     '''
-#     stories[0].append([2,51,52,53,54,55,7])
-#     s_sen_pos[0].append([8,8,8,8,8,8,8])
-#     s_word_pos[0].append([1,2,3,4,5,6,7])
-#     frames[0].append([2, 395, 236])
-#     f_sen_pos[0].append([8, 8, 8])
-#     f_word_pos[0].append([1, 2, 3])
-#     '''
-#     testing
-#     +3
-#     '''
-#     stories[0].append([2,51,52,53,54,55,7])
-#     s_sen_pos[0].append([9,9,9,9,9,9,9])
-#     s_word_pos[0].append([1,2,3,4,5,6,7])
-#     frames[0].append([2, 94, 31])
-#     f_sen_pos[0].append([9, 9, 9])
-#     f_word_pos[0].append([1, 2, 3])
-#     '''
-#     testing
-#     +4
-#     '''
-#     stories[0].append([2,51,52,53,54,55,7])
-#     s_sen_pos[0].append([10,10,10,10,10,10,10])
-#     s_word_pos[0].append([1,2,3,4,5,6,7])
-#     frames[0].append([2, 26, 1160])
-#     f_sen_pos[0].append([10, 10, 10])
-#     f_word_pos[0].append([1, 2, 3])                
-    
+     
     hop = hop[0]
     max_seq_len = 25
     max_frame_seq_len = 10 
@@ -1046,203 +765,7 @@ def ROC_collate_test_fn(data):
         frame_pos = [[s + [Constants.PAD for _ in range(hop_max_frame_len - len(s))] for i,s in enumerate(ss)] for ss in all_f_word_pos]
         
         
-    elif hop == 2:     
-        target_length = len(stories[0]) #5
-        frame_length = len(frames[0]) #5
-        hop_max_frame_len = max_frame_seq_len*2+1
-        hop_max_seq_len = max_seq_len*3
-        
-        pad_stories =  []
-        for ss in stories:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.BOS]+[Constants.EOS]+[Constants.BOS]+[Constants.EOS])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2)])
-                elif i == 1:
-                    sentence.extend([Constants.BOS]+[Constants.EOS]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1]))])
-                pad_story.append(sentence)
-                
-                assert len(sentence) == hop_max_seq_len, (str(i) + ',' + str(len(pad_story))+' v.s '+str(hop_max_seq_len))
-            pad_stories.append(pad_story)
-        #assert len(pad_stories) == 64, (str(len(pad_stories))+ '!= 64')
-            
-        pad_s_sen_pos = []    
-        for ss in s_sen_pos:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+[Constants.PAD]+[Constants.PAD])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2)])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1]))])
-                pad_story.append(sentence)
-            pad_s_sen_pos.append(pad_story)
-        #assert len(pad_s_sen_pos) == 64, (str(len(pad_s_sen_pos))+ '!= 64')
-            
-        stories_pos = []    
-        for ss in s_word_pos:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+[Constants.PAD]+[Constants.PAD])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2)])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1]))])
-                pad_story.append(sentence)
-            stories_pos.append(pad_story)
-        #assert len(stories_pos) == 64, (str(len(stories_pos)) + ' != 64')
-            
-                    
-        story_gold = []
-        for ss in stories:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+2*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 3 -(len(ss[i])))])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+(len(ss[i-1]))*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 1 - (len(ss[i-1])) -(len(ss[i])))])
-                else:
-                    sentence.extend((len(ss[i-2])-1)*[Constants.PAD]+(len(ss[i-1]))*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - (len(ss[i-2])-1) - (len(ss[i-1])) -(len(ss[i])))])
-                pad_story.append(sentence)
-            story_gold.append(pad_story)
-        #assert len(story_gold) == 64, (str(len(story_gold)) + ' != 64')
-            
-        pad_frame = [[ss[i] +[Constants.PAD for _ in range(hop_max_frame_len-len(ss[i]))] for i,s in enumerate(ss)] for ss in frames]
-        pad_f_sen_pos = [[ss[i] + [Constants.PAD for _ in range(hop_max_frame_len-len(ss[i]))] for i,s in enumerate(ss)] for ss in f_sen_pos]
-        frame_pos = [[ss[i] + [Constants.PAD for _ in range(hop_max_frame_len-len(ss[i]))] for i,s in enumerate(ss)] for ss in f_word_pos]                                
-        
-    elif hop == 2.5:     
-        max_frame_length = 25
-        hop_max_frame_len = max_frame_seq_len*max_frame_length+1
-        hop_max_seq_len = max_seq_len*3
-        frame_length = len(frame[0])
-        
-        pad_stories =  []
-        for ss in stories:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.BOS]+[Constants.EOS]+[Constants.BOS]+[Constants.EOS])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2)])
-                elif i == 1:
-                    sentence.extend([Constants.BOS]+[Constants.EOS]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1]))])
-                pad_story.append(sentence)
-                assert len(sentence) == hop_max_seq_len, (str(i) + ',' + str(len(pad_story))+' v.s '+str(hop_max_seq_len))
-            pad_stories.append(pad_story)
-            
-        pad_s_sen_pos = []    
-        for ss in s_sen_pos:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+[Constants.PAD]+[Constants.PAD])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2)])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1]))])
-                pad_story.append(sentence)
-            pad_s_sen_pos.append(pad_story)
-            
-        stories_pos = []    
-        for ss in s_word_pos:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+[Constants.PAD]+[Constants.PAD])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - 2)])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+[Constants.PAD]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 2 - len(ss[i-1]))]) 
-                else:
-                    sentence.extend(ss[i-2]+ ss[i-1])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len-len(ss[i-2])-len(ss[i-1]))])
-                pad_story.append(sentence)
-            stories_pos.append(pad_story)
-            
-                    
-        story_gold = []
-        for ss in stories:
-            pad_story = []
-            for i,s in enumerate(ss):
-                sentence = []
-                if i == 0:
-                    sentence.extend([Constants.PAD]+2*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 3 -(len(ss[i])))])
-                elif i == 1:
-                    sentence.extend([Constants.PAD]+(len(ss[i-1]))*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - 1 - (len(ss[i-1])) -(len(ss[i])))])
-                else:
-                    sentence.extend((len(ss[i-2])-1)*[Constants.PAD]+(len(ss[i-1]))*[Constants.PAD]+ ss[i])
-                    sentence.extend([Constants.PAD for _ in range(hop_max_seq_len - (len(ss[i-2])-1) - (len(ss[i-1])) -(len(ss[i])))])
-                pad_story.append(sentence)
-            story_gold.append(pad_story)
-        
-        all_frame = []
-        for frame in frames:
-            temp_frame = []
-            for f in frame:
-                temp_frame+=f
-            temp_frame += [Constants.EOS]
-            all_frame.append([temp_frame]*len(frame))
-            
-        all_f_sen_pos = []
-        for frame in f_sen_pos:
-            temp_frame = []
-            for f in frame:
-                temp_frame+=f
-            temp_frame += [temp_frame[-1]]
-            masked_frame = []
-#             all_f_sen_pos.append([temp_frame]*len(frame))
-            for i in range(len(frame)):
-                frame_copy = copy.deepcopy(temp_frame)
-                frame_copy = np.array(frame_copy)
-                frame_copy[frame_copy != (i+1)] = 0
-                masked_frame.append(frame_copy.tolist())
-            all_f_sen_pos.append(masked_frame)
-            
-        all_f_word_pos = []
-        for frame in f_word_pos:
-            temp_frame = []
-            for f in frame:
-                temp_frame+=f
-            temp_frame += [temp_frame[-1]+1]
-            all_f_word_pos.append([temp_frame]*len(frame))
-                
-        pad_frame  = [[s + [Constants.PAD for _ in range(hop_max_frame_len - len(s))] for i,s in enumerate(ss)] for ss in all_frame]
-        pad_f_sen_pos = [[s + [Constants.PAD for _ in range(hop_max_frame_len- len(s))] for i,s in enumerate(ss)] for ss in all_f_sen_pos]
-        frame_pos = [[s + [Constants.PAD for _ in range(hop_max_frame_len - len(s))] for i,s in enumerate(ss)] for ss in all_f_word_pos]
     
-        
     #lengths = torch.LongTensor(lengths).view(-1,1)
     targets = torch.LongTensor(pad_stories).view(-1, target_length, hop_max_seq_len)
     targets_pos = torch.LongTensor(stories_pos).view(-1, target_length, hop_max_seq_len)
@@ -1274,9 +797,6 @@ def ROC_added_termset_collate_fn(data):
     #List of sentences and frames [B,]
     stories, s_sen_pos, s_word_pos, frames, f_sen_pos, f_word_pos, hop = zip(*data)
     stories, s_sen_pos, s_word_pos, frames, f_sen_pos, f_word_pos, hop = stories[0], s_sen_pos[0], s_word_pos[0], frames[0], f_sen_pos[0], f_word_pos[0], hop[0]
-    print('frames[0]',frames[0])
-    print('f_sen_pos[0]',f_sen_pos[0])
-    print('f_word_pos[0]',f_word_pos[0])
     
     raise ValueError('should not be using ROC_added_termset_collate_fn in sentence2sentence model')
     
@@ -1324,3 +844,52 @@ def get_window_loader(VIST, roc_vocab, frame_vocab, batch_size, shuffle, num_wor
                                               num_workers=num_workers,
                                               collate_fn=ROC_added_termset_collate_fn)
     return data_loader
+
+#     '''
+#     toy set
+#     '''
+#     frames = [[[2, 55],[2, 395],[2,   26],[2, 278],[2, 85]]]
+#     f_sen_pos[0].append([7, 7, 7])
+#     f_word_pos[0].append([1, 2, 3])
+
+
+#     '''
+#     testing
+#     +1
+#     '''
+#     stories[0].append([2,51,52,53,54,55,7])
+#     s_sen_pos[0].append([7,7,7,7,7,7,7])
+#     s_word_pos[0].append([1,2,3,4,5,6,7])
+#     frames[0].append([2, 55, 56])
+#     f_sen_pos[0].append([7, 7, 7])
+#     f_word_pos[0].append([1, 2, 3])
+#     '''
+#     testing
+#     +2
+#     '''
+#     stories[0].append([2,51,52,53,54,55,7])
+#     s_sen_pos[0].append([8,8,8,8,8,8,8])
+#     s_word_pos[0].append([1,2,3,4,5,6,7])
+#     frames[0].append([2, 395, 236])
+#     f_sen_pos[0].append([8, 8, 8])
+#     f_word_pos[0].append([1, 2, 3])
+#     '''
+#     testing
+#     +3
+#     '''
+#     stories[0].append([2,51,52,53,54,55,7])
+#     s_sen_pos[0].append([9,9,9,9,9,9,9])
+#     s_word_pos[0].append([1,2,3,4,5,6,7])
+#     frames[0].append([2, 94, 31])
+#     f_sen_pos[0].append([9, 9, 9])
+#     f_word_pos[0].append([1, 2, 3])
+#     '''
+#     testing
+#     +4
+#     '''
+#     stories[0].append([2,51,52,53,54,55,7])
+#     s_sen_pos[0].append([10,10,10,10,10,10,10])
+#     s_word_pos[0].append([1,2,3,4,5,6,7])
+#     frames[0].append([2, 26, 1160])
+#     f_sen_pos[0].append([10, 10, 10])
+#     f_word_pos[0].append([1, 2, 3])           
