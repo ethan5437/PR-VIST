@@ -79,31 +79,19 @@ def main():
     opt.src_vocab_size = len(Dataloader.frame_vocab)
     opt.tgt_vocab_size = len(Dataloader.story_vocab)
     
-#     output = json.load(open('../data/VIST/VIST_replace_coref_mapped_frame_noun_test_diverse_length.json'))
     output = json.load(open('../data/generated_terms/VIST_test_self_output_diverse.json'))
-    #output = json.load(open('../data/added_path_terms_ACL/best_path_vg_5terms_story.json'))
 
     term_path = opt.term_path.split('/')[-1]
     term_path = '.'.join(term_path.split('.')[:-1])
     model_path = opt.model.split('/')[0]
-    output_filename = f'../data/generated_story_ACL2021/TransLSTM{str(opt.hop)}_{model_path}_term_{term_path}.json'
-#     '../data/generated_story_IJCAI/VIST_VG_'+'hop_'+str(opt.hop)+'_best_path_random_5terms_bounded_BIO_set'+'.json'
+    output_filename = f'generated_story/TransLSTM{str(opt.hop)}_{model_path}_term_{term_path}.json'
     print(f'output filename: {output_filename}')
-            
-    #output = json.load(open('../../commen-sense-storytelling/data/remove_bus_test.json'))
+    
     count=0
     BOS_set = set([2,3,4,5,6,7])
     translator = Translator(opt)
 
-    
-    #print('tombstone_NOUN',Dataloader.frame_vocab.word2idx['tombstone_NOUN'])
-    #print('I_NOUN',Dataloader.frame_vocab.word2idx['I_NOUN']) 
-    #print('i_NOUN',Dataloader.frame_vocab.word2idx['i_NOUN']) 
-    print('.',Dataloader.story_vocab.word2idx['.'])
-    print('!',Dataloader.story_vocab.word2idx['!'])
-
     story_count = 0
-#     gt_index = int(opt.hop)-1
     hop = opt.hop
     bigger_than_10 = 0
     
@@ -119,6 +107,7 @@ def main():
                 f_line = ''
             else:
                 f_line = ' '.join([Dataloader.frame_vocab.idx2word[idx.item()] for idx in frame[0][0] if idx!=Constants.PAD])
+                
             if f_line in frame_story_dict.keys():
                 if type(output[0]) is list:
                     for sentence_index in range(len(output[count])):
@@ -181,10 +170,12 @@ def main():
                         hop_max_seq_len = len(gt_seq[0])
                         if len(pred_sentence) > 0:
                             pred_sentence = [seq for seq in pred_sentence if seq != Constants.PAD]
-                            if pred_sentence[0] != 2: #not equal to BOS
-                                pred_sentence = [2] + pred_sentence
-                            if pred_sentence[-1] != 7: #not equal to EOS
-                                pred_sentence = pred_sentence + [7]                            
+                            if pred_sentence[0] != Constants.BOS: #not equal to BOS
+                                pred_sentence = [Constants.BOS] + pred_sentence
+                            if pred_sentence[-1] != Constants.EOS: #not equal to EOS
+                                pred_sentence = pred_sentence + [Constants.EOS]
+
+                            
                         gt_seq_ = torch.tensor([pred_sentence +[Constants.PAD for _ in range(hop_max_seq_len - len(pred_sentence))]])[0]
                         gt_pos_ = torch.tensor([list(range(1, len(pred_sentence)+1)) +[Constants.PAD for _ in range(hop_max_seq_len - len(pred_sentence))]])[0]
                         gt_sen_pos_ = torch.tensor([[i]*len(pred_sentence) +[Constants.PAD for _ in range(hop_max_seq_len - len(pred_sentence))]])[0]
@@ -199,9 +190,9 @@ def main():
                         gt_seq_history.append(gt_seq_)
 
                 f_line = ' '.join([Dataloader.frame_vocab.idx2word[idx.item()] for idx in f[0] if idx!=Constants.PAD])
-                #LSTM_modification
+        
                 previous_gt_seq_ = torch.stack(gt_seq_history)
-                #LSTM_modification
+            
                 all_hyp, all_scores = translator.translate_batch(f, f_pos, f_sen_pos, gt_seq_, gt_pos_, gt_sen_pos_, previous_gt_seq_, story_len, pred_seq, pred_seq_pos, pred_seq_sen_pos)
                 
                 assert len(all_hyp) == 1,(len(all_hyp) == 1)
@@ -215,7 +206,9 @@ def main():
                         pred_sentence = idx_seq[:index[0]+1] + [7]
                     else:
                         pred_sentence = idx_seq
+
                 print_line = ' '.join([Dataloader.story_vocab.idx2word[idx] for idx in pred_sentence if idx not in BOS_set])
+                
                 print_line_list.append(print_line)
 
             frame_story_dict.update({f_line:' '.join(print_line_list)})
@@ -230,10 +223,6 @@ def main():
             else:
                 for sentence_index in range(5):
                     output[count]['predicted_story']=' '.join(print_line_list)
-#                     if sentence_index < len(print_line_list):
-#                         output[count]['predicted_sentence'] = print_line_list[sentence_index]                
-#                     else:
-#                         output[count]['predicted_sentence'] = ''
                     count+=1
                 
               
@@ -241,7 +230,6 @@ def main():
             if story_count < 10:
                 print('print_line_list',print_line_list)
             story_count+=1
-        
     print('[Info] Finished.')
     json.dump(output, open(output_filename,'w'), indent=4)
     
