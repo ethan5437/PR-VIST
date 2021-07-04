@@ -8,7 +8,7 @@ This repository is the implementation of PR-VIST:
 cd generated_stories
 unzip PR_VIST.json.zip
 ```
-> `predicted_story` is the whole story predicted by PR-VIST
+`predicted_story` is the whole story predicted by PR-VIST
 
 ## Environment
 ```
