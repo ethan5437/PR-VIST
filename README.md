@@ -33,7 +33,7 @@ python==3.7.6
 bash download_big_data.sh
 unzip data.zip
 ```
-## Stage 1: Story Plotting
+## Stage 1: Story Plotting (For pre-trained model checkpoints: coming soon...!)
 ### A. Training Storyline Predictor: 
 > Working directory: `PRVIST/story_plotting/script`
 ```bash=
@@ -41,7 +41,7 @@ bash run_once.sh
 ```
 generated model checkpoints will be saved to: `PRVIST/story_plotting/saved_model/`
 
-For pre-trained checkpoints: coming soon...!
+
 
 ### B. Generating Storyline:
 > Working directory: `PRVIST/story_plotting/script`
@@ -66,5 +66,58 @@ To download the predicted storyline in the paper:
 bash download_example.sh
 unzip generated_storylines.zip
 ```
-## Stage 2: Story Reworking
-coming soon...
+## Stage 2: Story Reworking (For pre-trained model checkpoints: coming soon...!)
+ The implemented Transformer in this paper is: 
+ **Length-Controlled Transformer** (proposed in  ACL-IJCNLP demo 2021: Stretch-VST: Getting Flexible With Visual Stories). 
+ 
+ ### A. Pre-Train Transformer with ROC Story dataset
+> Working directory: `PRVIST/story_reworking`
+
+```bash=
+cd story_reworking/term2sentence_lstm/
+bash run.sh [YOUR_DEVICE_NUMVER] roc
+```
+e.g., 
+if you want to train on GPU device 0** 
+```bash=
+bash run.sh 0 roc
+```
+
+the trained model checkpoint is saved to: `save_model_BIO_[TODAY's DATE]/trained.chkpt`
+
+### B. Finetuning the VIST dataset
+```bash=
+bash run_finetune.sh [MODEL_CHECKPOINT_FILEPATH] [YOUR_DEVICE_NUMVER]
+```
+e.g., 
+YOUR_DEVICE_NUMVER = 1, 
+MODEL_CHECKPOINT_FILEPATH = save_model_BIO_August18roc1.5_reverse/trained.chkpt
+
+```bash=
+bash run_finetune.sh save_model_BIO_August18roc1.5_reverse/trained.chkpt finetune 1
+```
+
+the trained model checkpoint is saved to: `save_model_BIO_[TODAY’s DATE]_hierarchical_story_dis_vist/[xx.xxx].chkpt
+`
+where xx.xxx = validation perplexity
+
+### C. Story Generation
+```bash=
+python 1sentence_inference.py -model [MODEL_CHECKPOINT_FILEPATH] -device [YOUR_DEVICE_NUMVER] -hop 1.5 -add_term True -term_path [Predicted_Storyline]
+```
+
+Example code:
+```bash=
+python 1sentence_inference.py -model save_model_BIO_August18finetune1.5_hierarchical_reverse_story_dis_sen_dis_pretrain_vist/trained_ppl_61.621.chkpt -device 2 -hop 1.5 -add_term True -term_path ../../story_plotting/generated_storylines/example_storyline.json
+```
+
+output filename = f'generated_story/TransLSTM{str(opt.hop)}_{model_path}_term_{term_path}.json'
+
+---
+## Side notes:
+I would upload the model checkpoints in the future!
+
+### Stage 1
+* If your UHop training phase is very slow, it's normal!!! I tooke roughly a day to train an epoch. It's not very computationally efficient, but it's probably one of the fastest framework avaliable.
+* I tried training with several different parameter settings (not all, because it's very computationally expensive), and it seems **unlikely to have any effect on model performance**.
+
