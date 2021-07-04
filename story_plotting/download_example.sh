@@ -1,1 +1,1 @@
-wget https://doraemon.iis.sinica.edu.tw/PRVIST/generated_storylines.zip
+wget https://doraemon.iis.sinica.edu.tw/PRVIST/story_plotting/generated_storylines.zip
