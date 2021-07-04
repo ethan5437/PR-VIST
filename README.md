@@ -66,12 +66,25 @@ To download the predicted storyline in the paper:
 bash download_example.sh
 unzip generated_storylines.zip
 ```
-## Stage 2: Story Reworking (For pre-trained model checkpoints: coming soon...!)
+## Stage 2: Story Reworking (For pre-trained Transformer checkpoints: coming soon...!)
  The implemented Transformer in this paper is: 
  **Length-Controlled Transformer** (proposed in  ACL-IJCNLP demo 2021: Stretch-VST: Getting Flexible With Visual Stories). 
  
+ ### A. Download Datasets
+> Working directory: `PRVIST/story_reworking/`
+```bash=
+bash download_big_data.sh
+unzip data.zip
+```
+ ### B. Download Discriminator Model Checkpoints
+> Working directory: `PRVIST/story_reworking/discriminator/`
+```bash=
+bash download_checkpoint.sh
+unzip data.zip
+```
+
  ### A. Pre-Train Transformer with ROC Story dataset
-> Working directory: `PRVIST/story_reworking`
+> Working directory: `PRVIST/story_reworking/`
 
 ```bash=
 cd story_reworking/term2sentence_lstm/
@@ -86,6 +99,8 @@ bash run.sh 0 roc
 the trained model checkpoint is saved to: `save_model_BIO_[TODAY's DATE]/trained.chkpt`
 
 ### B. Finetuning on VIST dataset
+> Working directory: `PRVIST/story_reworking/`
+
 ```bash=
 bash run_finetune.sh [MODEL_CHECKPOINT_FILEPATH] [YOUR_DEVICE_NUMVER]
 ```
@@ -102,6 +117,8 @@ the trained model checkpoint is saved to: `save_model_BIO_[TODAY’s DATE]_hiera
 where xx.xxx = validation perplexity
 
 ### C. Story Generation
+> Working directory: `PRVIST/story_reworking/`
+
 ```bash=
 python 1sentence_inference.py -model [MODEL_CHECKPOINT_FILEPATH] -device [YOUR_DEVICE_NUMVER] -hop 1.5 -add_term True -term_path [Predicted_Storyline]
 ```
@@ -118,6 +135,6 @@ output filename = f'generated_story/TransLSTM{str(opt.hop)}_{model_path}_term_{t
 I would upload the model checkpoints in the future!
 
 ### Stage 1
-* If your UHop training phase is very slow, it's normal!!! I tooke roughly a day to train an epoch. It's not very computationally efficient, but it's probably one of the fastest framework avaliable.
+* If your UHop training phase is very slow, it's perfectly normal!!! I tooke roughly a day to train an epoch. It's not very computationally efficient, but it's probably one of the fastest framework avaliable.
 * I tried training with several different parameter settings (not all, because it's very computationally expensive), and it seems **unlikely to have any effect on model performance**.
 
