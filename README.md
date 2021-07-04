@@ -85,7 +85,7 @@ bash run.sh 0 roc
 
 the trained model checkpoint is saved to: `save_model_BIO_[TODAY's DATE]/trained.chkpt`
 
-### B. Finetuning the VIST dataset
+### B. Finetuning on VIST dataset
 ```bash=
 bash run_finetune.sh [MODEL_CHECKPOINT_FILEPATH] [YOUR_DEVICE_NUMVER]
 ```
