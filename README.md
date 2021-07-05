@@ -1,7 +1,7 @@
 # PR-VIST
 This repository is the implementation of PR-VIST:
 
-**Plot and Rework: Modeling Storylines for Visual Storytelling (ACL-IJCNLP2021 Findings)** [[arXiv]](https://arxiv.org/abs/2105.06950)
+Plot and Rework: Modeling Storylines for Visual Storytelling (ACL-IJCNLP2021 Findings) [[arXiv]](https://arxiv.org/abs/2105.06950)
 
 ### Generated Stories
 > Working directory: `PRVIST/generated_stories/`
@@ -34,7 +34,7 @@ bash download_big_data.sh
 unzip data.zip
 ```
 ## Stage 1: Story Plotting (For pre-trained model checkpoints: coming soon...!)
-### A. Training Storyline Predictor: 
+### Training Storyline Predictor: 
 > Working directory: `PRVIST/story_plotting/script`
 ```bash=
 bash run_once.sh
@@ -43,7 +43,7 @@ generated model checkpoints will be saved to: `PRVIST/story_plotting/saved_model
 
 
 
-### B. Generating Storyline:
+### Generating Storyline:
 > Working directory: `PRVIST/story_plotting/script`
 
 Open the file: `run_generation.sh`
@@ -58,7 +58,7 @@ bash run_generation.sh
 
 The predicted storyline will be saved to: `../generated_storylines/pred_terms_[......].json`
 
-### C. Download Predicted Storyline:
+### Download Predicted Storyline:
 > Working directory: `PRVIST/story_plotting/`
 
 Download the predicted storyline in this paper:
@@ -71,20 +71,20 @@ unzip generated_storylines.zip
  The implemented Transformer in this paper is: 
  **Length-Controlled Transformer** (proposed in  ACL-IJCNLP demo 2021: Stretch-VST: Getting Flexible With Visual Stories). 
  
- ### A. Download Datasets
+ ### Download Datasets
 > Working directory: `PRVIST/story_reworking/`
 ```bash=
 bash download_big_data.sh
 unzip data.zip
 ```
- ### B. Download Discriminator Model Checkpoints
+ ### Download Discriminator Model Checkpoints
 > Working directory: `PRVIST/story_reworking/discriminator/`
 ```bash=
 bash download_checkpoint.sh
 unzip data.zip
 ```
 
- ### C. Pre-Train Transformer with ROC Story dataset
+ ### Pre-Train Transformer with ROC Story dataset
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
@@ -98,7 +98,7 @@ bash run.sh 0 roc
 
 the trained model checkpoint is saved to: `save_model_BIO_[TODAY's DATE]/trained.chkpt`
 
-### D. Finetuning on VIST dataset
+### Finetuning on VIST dataset
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
@@ -116,7 +116,7 @@ the trained model checkpoint is saved to: `save_model_BIO_[TODAY’s DATE]_hiera
 `
 where xx.xxx = validation perplexity
 
-### E. Story Generation
+### Story Generation
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
