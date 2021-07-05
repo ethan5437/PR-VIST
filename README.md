@@ -33,7 +33,7 @@ python==3.7.6
 bash download_big_data.sh
 unzip data.zip
 ```
-## Stage 1: Story Plotting (For pre-trained model checkpoints: coming soon...!)
+## Stage 1: Story Plotting
 ### Training Storyline Predictor: 
 > Working directory: `PRVIST/story_plotting/script`
 ```bash=
@@ -43,7 +43,7 @@ generated model checkpoints will be saved to: `PRVIST/story_plotting/saved_model
 
 
 
-### Generating Storyline:
+### Generating Storyline (For pre-trained model checkpoints: coming soon...!):
 > Working directory: `PRVIST/story_plotting/script`
 
 Open the file: `run_generation.sh`
@@ -67,9 +67,9 @@ Download the predicted storyline in this paper:
 bash download_example.sh
 unzip generated_storylines.zip
 ```
-## Stage 2: Story Reworking (For pre-trained Transformer checkpoints: coming soon...!)
+## Stage 2: Story Reworking
  The implemented Transformer in this paper is: 
- **Length-Controlled Transformer** (proposed in  ACL-IJCNLP demo 2021: Stretch-VST: Getting Flexible With Visual Stories). 
+ Length-Controlled Transformer (proposed in  ACL-IJCNLP demo 2021: Stretch-VST: Getting Flexible With Visual Stories). 
  
  ### Download Datasets
 > Working directory: `PRVIST/story_reworking/`
@@ -84,7 +84,7 @@ bash download_checkpoint.sh
 unzip data.zip
 ```
 
- ### Pre-Train Transformer with ROC Story dataset
+ ### Pre-Train Transformer with ROC Story dataset 
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
@@ -116,7 +116,7 @@ the trained model checkpoint is saved to: `save_model_BIO_[TODAY’s DATE]_hiera
 `
 where xx.xxx = validation perplexity
 
-### Story Generation
+### Story Generation (For pre-trained Transformer checkpoints: coming soon...!)
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
