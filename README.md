@@ -102,7 +102,7 @@ the trained model checkpoint is saved to: `save_model_BIO_[TODAY's DATE]/trained
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
-bash run_finetune.sh [MODEL_CHECKPOINT_FILEPATH] [YOUR_DEVICE_NUMVER]
+bash run_finetune.sh [MODEL_CHECKPOINT_FILEPATH] finetune [YOUR_DEVICE_NUMVER]
 ```
 e.g., 
 YOUR_DEVICE_NUMVER = 1, 
