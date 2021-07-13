@@ -307,11 +307,13 @@ def train_vist_epoch(model, training_data, vist_train_data, optimizer, device, s
                 gold = tgt_gold[i]
                 #LSTM Modification
                 pred = model(src_seq[i], src_pos[i], src_sen_pos[i], tgt_seq[i], tgt_pos[i], tgt_sen_pos[i], previous_tgt[:i+1], story_len)
+                
+                # backward
+                loss, n_correct = cal_performance(pred, gold, 'story', smoothing=False)
                 ###LSTM (Concatenation) Modification
                 gold_zeros = torch.zeros(gold.size(0),1, device=gold.device, dtype = gold.dtype)
                 gold = torch.cat((gold_zeros, gold),1)
-                # backward
-                loss, n_correct = cal_performance(pred, gold, 'story', smoothing=False)
+                
                 if opt.is_story_discriminator:
                     pred_idx = pred.max(1)[1].view(gold.size(0), gold.size(1))
                     story_pred = torch.cat((story_pred, pred_idx),1)   
@@ -456,11 +458,12 @@ def eval_epoch(model, validation_data, device, Dataloader, opt, discriminator):
                     gold = targets_gold[i]
                     #LSTM Modification
                     pred = model(frame[i], frame_pos[i], frame_sen_pos[i], targets[i], targets_pos[i], targets_sen_pos[i], previous_targets[:i+1], story_len)
+
+                    # backward
+                    loss, n_correct = cal_performance(pred, gold, 'story', smoothing=False)
                     ###LSTM (Concatenation) Modification
                     gold_zeros = torch.zeros(gold.size(0),1, device=gold.device, dtype = gold.dtype)
                     gold = torch.cat((gold_zeros, gold),1)
-                    # backward
-                    loss, n_correct = cal_performance(pred, gold, 'story', smoothing=False)
                     if opt.is_story_discriminator:
                         pred_idx = pred.max(1)[1].view(gold.size(0), gold.size(1))
                         story_pred = torch.cat((story_pred, pred_idx),1)   
