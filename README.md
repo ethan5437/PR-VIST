@@ -43,15 +43,28 @@ generated model checkpoints will be saved to: `PRVIST/story_plotting/saved_model
 
 
 
-#### B. Generating Storyline (For pre-trained model checkpoints: coming soon...!):
+#### B. Generating Storyline:
+For pre-trained storyline predictor: 
+
+> Working directory: `PRVIST/story_plotting/`
+```bash=
+bash download_checkpoint.sh
+
+cd saved_model
+unzip HR_BiLSTM_plus_36.zip
+```
+
+Generating storyline:
+
 > Working directory: `PRVIST/story_plotting/script`
 
 Open the file: `run_generation.sh`
 
 Edit the `--path ../saved_model/HR_BiLSTM_plus_432 ` to your desire model path. 
 
-e.g.) change `--path ../saved_model/HR_BiLSTM_plus_432 ` to `--path  ../saved_model/HR_BiLSTM_plus_1`
+e.g.) change `--path ../saved_model/HR_BiLSTM_plus_432 ` to `--path  ../saved_model/HR_BiLSTM_plus_36`
 
+Then, 
 ```bash=
 bash run_generation.sh
 ```
