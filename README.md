@@ -3,7 +3,7 @@ This repository is the implementation of PR-VIST:
 
 Plot and Rework: Modeling Storylines for Visual Storytelling (ACL-IJCNLP2021 Findings) [[arXiv]](https://arxiv.org/abs/2105.06950)
 
-### Generated Stories
+### Download PR-VIST Generated Stories
 > Working directory: `PRVIST/generated_stories/`
 ```bash=
 unzip PR_VIST.json.zip
@@ -16,7 +16,7 @@ pytorch==1.7.1
 python==3.7.6
 ```
 
-## Stage 0: Preparation
+## STAGE 0: Preparation
 #### Download dataset and knowledge graphs
 * GloVe Word Embedding
 * Relation ids
@@ -33,18 +33,18 @@ python==3.7.6
 bash download_big_data.sh
 unzip data.zip
 ```
-## Stage 1: Story Plotting
-#### A. Training Storyline Predictor: 
+## STAGE 1: Story Plotting
+#### STEP A. Train Storyline Predictor: 
 > Working directory: `PRVIST/story_plotting/script`
 ```bash=
 bash run_once.sh
 ```
-generated model checkpoints will be saved to: `PRVIST/story_plotting/saved_model/`
+trained model checkpoints will be saved as: `PRVIST/story_plotting/saved_model/`
 
 
 
-#### B. Generating Storyline:
-If you wish to use our pre-trained storyline predictor: 
+#### STEP B. Generate Storylines:
+If you wish to use our pre-trained storyline predictor model checkpoint instead, you can download it via: 
 
 > Working directory: `PRVIST/story_plotting/`
 ```bash=
@@ -54,50 +54,47 @@ cd saved_model
 unzip HR_BiLSTM_plus_36.zip
 ```
 
-Generating storyline:
+Generate storylines:
 
 > Working directory: `PRVIST/story_plotting/script`
 
-Open the file: `run_generation.sh`
-
-Edit the `--path ../saved_model/HR_BiLSTM_plus_432 ` to your desire model path. 
-
-e.g.) change `--path ../saved_model/HR_BiLSTM_plus_432 ` to `--path  ../saved_model/HR_BiLSTM_plus_36`
+Open the file: `run_generation.sh`, and edit the `--path ../saved_model/HR_BiLSTM_plus_432 ` to your desire model path. e.g.) change `--path ../saved_model/HR_BiLSTM_plus_432 ` to `--path  ../saved_model/HR_BiLSTM_plus_36`
 
 Then, 
 ```bash=
 bash run_generation.sh
 ```
 
-The predicted storyline will be saved to: `../generated_storylines/pred_terms_[......].json`
+The predicted storyline will be saved as: `../generated_storylines/pred_terms_[......].json`
 
-#### C. Download Predicted Storyline (Optional):
+#### (Optional) Download Predicted Storylines:
 > Working directory: `PRVIST/story_plotting/`
 
-If you wish you use the predicted storyline of our paper, you can download the predicted storyline via:
+Training Story-predictor may take a while, if you wish to skip STEP A-B, you can download our predicted storylines directly via:
+
 ```bash=
 bash download_example.sh
 unzip generated_storylines.zip
 ```
 
-## Stage 2: Story Reworking
+## STAGE 2: Story Reworking
  The implemented Transformer in this paper is: 
  Length-Controlled Transformer (proposed in  ACL-IJCNLP demo 2021: Stretch-VST: Getting Flexible With Visual Stories). 
  
- #### A. Download Datasets
+ #### STEP A. Download Datasets
 > Working directory: `PRVIST/story_reworking/`
 ```bash=
 bash download_big_data.sh
 unzip data.zip
 ```
- #### B. Download Discriminator Model Checkpoints
+ #### STEP B. Download Discriminator Model Checkpoints
 > Working directory: `PRVIST/story_reworking/discriminator/`
 ```bash=
 bash download_checkpoint.sh
 unzip saved_model.zip
 ```
 
- #### C. Pre-Train Transformer with ROC Story dataset 
+ #### STEP C. Pre-Train Transformer with ROC Story dataset 
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
@@ -109,9 +106,9 @@ if you want to train on GPU device 0
 bash run.sh 0 roc
 ```
 
-the trained model checkpoint is saved to: `save_model_BIO_[TODAY's DATE]/trained.chkpt`
+the trained model checkpoint is saved as: `save_model_BIO_[TODAY's DATE]/trained.chkpt`
 
-#### D. Finetuning on VIST dataset
+#### STEP D. Finetune Transformer on VIST dataset
 > Working directory: `PRVIST/story_reworking/`
 
 ```bash=
@@ -125,19 +122,20 @@ MODEL_CHECKPOINT_FILEPATH = save_model_BIO_August18roc1.5_reverse/trained.chkpt
 bash run_finetune.sh save_model_BIO_August18roc1.5_reverse/trained.chkpt finetune 1
 ```
 
-the trained model checkpoint is saved to: `save_model_BIO_[TODAY’s DATE]_hierarchical_story_dis_vist/[xx.xxx].chkpt
+the trained model checkpoint is saved as: `save_model_BIO_[TODAY’s DATE]_hierarchical_story_dis_vist/[xx.xxx].chkpt
 `
 where xx.xxx = validation perplexity
 
-#### E. Story Generation (For pre-trained Transformer checkpoints: coming soon...!)
+#### STEP E. Story Generation
 > Working directory: `PRVIST/story_reworking/`
-If you wish to use our pre-trained model: 
+If you wish to use our pre-trained model checkpoint instead: 
 ```bash=
 bash download_checkpoint.sh
 unzip save_model_BIO_Jul-14-2021finetune1.5_hierarchical_story_dis_reward_rate_1.0_pretrain_vist.zip
 ```
+This checkpoint was pre-trained on ROC and finetuned on VIST with discriminator.  
 
-Generating story from predicted storyline:
+Generate stories from the predicted storylines:
 ```bash=
 python 1sentence_inference.py -model [MODEL_CHECKPOINT_FILEPATH] -device [YOUR_DEVICE_NUMVER] -hop 1.5 -add_term True -term_path [Predicted_Storyline]
 ```
