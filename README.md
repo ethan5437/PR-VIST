@@ -44,7 +44,7 @@ generated model checkpoints will be saved to: `PRVIST/story_plotting/saved_model
 
 
 #### B. Generating Storyline:
-For pre-trained storyline predictor: 
+If you wish to use our pre-trained storyline predictor: 
 
 > Working directory: `PRVIST/story_plotting/`
 ```bash=
@@ -71,15 +71,15 @@ bash run_generation.sh
 
 The predicted storyline will be saved to: `../generated_storylines/pred_terms_[......].json`
 
-#### C. Download Predicted Storyline:
+#### C. Download Predicted Storyline (Optional):
 > Working directory: `PRVIST/story_plotting/`
 
-Download the predicted storyline in this paper:
-
+If you wish you use the predicted storyline of our paper, you can download the predicted storyline via:
 ```bash=
 bash download_example.sh
 unzip generated_storylines.zip
 ```
+
 ## Stage 2: Story Reworking
  The implemented Transformer in this paper is: 
  Length-Controlled Transformer (proposed in  ACL-IJCNLP demo 2021: Stretch-VST: Getting Flexible With Visual Stories). 
@@ -94,7 +94,7 @@ unzip data.zip
 > Working directory: `PRVIST/story_reworking/discriminator/`
 ```bash=
 bash download_checkpoint.sh
-unzip data.zip
+unzip saved_model.zip
 ```
 
  #### C. Pre-Train Transformer with ROC Story dataset 
@@ -131,14 +131,20 @@ where xx.xxx = validation perplexity
 
 #### E. Story Generation (For pre-trained Transformer checkpoints: coming soon...!)
 > Working directory: `PRVIST/story_reworking/`
+If you wish to use our pre-trained model: 
+```bash=
+bash download_checkpoint.sh
+unzip save_model_BIO_Jul-14-2021finetune1.5_hierarchical_story_dis_reward_rate_1.0_pretrain_vist.zip
+```
 
+Generating story from predicted storyline:
 ```bash=
 python 1sentence_inference.py -model [MODEL_CHECKPOINT_FILEPATH] -device [YOUR_DEVICE_NUMVER] -hop 1.5 -add_term True -term_path [Predicted_Storyline]
 ```
 
 Example code:
 ```bash=
-python 1sentence_inference.py -model save_model_BIO_August18finetune1.5_hierarchical_reverse_story_dis_sen_dis_pretrain_vist/trained_ppl_61.621.chkpt -device 2 -hop 1.5 -add_term True -term_path ../../story_plotting/generated_storylines/example_storyline.json
+python 1sentence_inference.py -model save_model_BIO_Jul-14-2021finetune1.5_hierarchical_story_dis_reward_rate_1.0_pretrain_vist/trained.chkpt -device 2 -hop 1.5 -add_term True -term_path ../../story_plotting/generated_storylines/example_storyline.json
 ```
 
 output filename = f'generated_story/TransLSTM{str(opt.hop)}_{model_path}_term_{term_path}.json'
