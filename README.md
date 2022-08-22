@@ -8,8 +8,9 @@ Plot and Rework: Modeling Storylines for Visual Storytelling (ACL-IJCNLP2021 Fin
 ```bash=
 unzip PR_VIST.json.zip
 ```
+If you only want our generated stories:
 `predicted_story` is the whole story predicted by PR-VIST
-
+If you want to learn more about PR-VIST, please read the following:
 ## Environment
 ```
 pytorch==1.7.1
