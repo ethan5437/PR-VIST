@@ -9,7 +9,7 @@ Plot and Rework: Modeling Storylines for Visual Storytelling (ACL-IJCNLP2021 Fin
 unzip PR_VIST.json.zip
 ```
 If you only want our generated stories:
-`predicted_story` is the whole story predicted by PR-VIST. 
+`predicted_story` in the `PR_VIST.json` is the whole story predicted by PR-VIST. 
 However, if you want to learn more about PR-VIST, please read the following:
 ## Environment
 ```
